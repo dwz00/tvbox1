@@ -914,8 +914,8 @@ class GetSrc:
 
 
     if __name__ == "__main__":
-    import asyncio
-    import os
+        import asyncio
+        import os
 
     # 1. 自动获取当前 GitHub 运行环境的参数
     # 如果在本地运行，请手动填入你的用户名和仓库名
