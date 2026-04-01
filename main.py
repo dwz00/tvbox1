@@ -109,3 +109,4 @@ if __name__ == "__main__":
     loop.run_until_complete(tool.download_drpy2_files())
     
     tool.run()
+print(f"成功生成文件：{len(all_sites)} 个站点")
