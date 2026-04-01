@@ -80,7 +80,7 @@ class GetSrc:
         # --- 3. 生成私有化地址 (智能查找本地 Jar) ---
         if last_spider_name:
             # 本次抓取成功拿到了新 Jar
-            my_spider_url = f"https://ghp.ci{self.username}/{self.repo_name}/main/jar/{last_spider_name}"
+            my_spider_url = f"https://ghproxy.com{self.username}/{self.repo_name}/main/jar/{last_spider_name}"
         else:
             # 本次没抓到，尝试去 jar 文件夹找找有没有以前存下的旧 Jar
             local_jars = list(self.jar_path.glob(f"*.{self.jar_suffix}"))
