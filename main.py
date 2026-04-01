@@ -79,9 +79,9 @@ class GetSrc:
 
         # --- 3. 生成指向本仓库的私有化地址 (修复了 raw 链接格式) ---
         if last_spider_name:
-            my_spider_url = f"https://githubusercontent.com{self.username}/{self.repo_name}/main/jar/{last_spider_name}"
+            my_spider_url = f"https://ghp.ci/https://githubusercontent.com{self.username}/{self.repo_name}/main/jar/{last_spider_name}"
         else:
-            my_spider_url = ""
+            my_spider_url = "https://ghproxy.net/https://githubusercontent.com{self.username}/{self.repo_name}/main/jar/{last_spider_name}"
 
         # --- 4. 构造最终配置 (合并直播源) ---
         config = {
