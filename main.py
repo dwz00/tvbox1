@@ -78,10 +78,16 @@ class GetSrc:
                 print(f"抓取失败 {u}: {e}")
 
         # --- 3. 生成指向本仓库的私有化地址 (修复了 raw 链接格式) ---
+                # --- 3. 生成私有化地址 (修复了链接格式并添加加速) ---
         if last_spider_name:
-            my_spider_url = f"https://ghp.ci/https://githubusercontent.com{self.username}/{self.repo_name}/main/jar/{last_spider_name}"
+            # 优先使用 ghp.ci 加速，并确保 raw 格式正确
+            my_spider_url = f"https://ghp.ci{self.username}/{self.repo_name}/main/jar/{last_spider_name}"
         else:
-            my_spider_url = "https://ghproxy.net/https://githubusercontent.com{self.username}/{self.repo_name}/main/jar/{last_spider_name}"
+            # 如果没抓到 Jar，给一个保底的远程 Jar (可选)
+            my_spider_url = "https://ghp.cigaotianliuyun/gao/master/lib/spider.jar"
+
+        # 打印一下看看对不对
+        print(f"生成的 Spider 链接: {my_spider_url}")
 
         # --- 4. 构造最终配置 (合并直播源) ---
         config = {
