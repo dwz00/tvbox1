@@ -9,7 +9,6 @@ class GetSrc:
         self.username = username
         self.repo_name = repo
         self.token = token
-        # 确保 url 是字符串且不为空
         self.url = str(url) if url else ""
         self.target = target
         self.base_path = Path(".").absolute()
@@ -18,6 +17,9 @@ class GetSrc:
         self.jar_path.mkdir(parents=True, exist_ok=True)
         self.api_path.mkdir(parents=True, exist_ok=True)
         self.s = requests.Session()
+        self.s.verify = False 
+        # --- 必须添加这一行，否则 run 方法找不到它 ---
+        self.jar_suffix = 'jar' 
 
     async def download_drpy2_files(self):
         """同步核心 JS 依赖"""
