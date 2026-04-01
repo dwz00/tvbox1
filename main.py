@@ -27,8 +27,6 @@ ssl._create_default_https_context = ssl._create_unverified_context
 import urllib3
 from urllib3.exceptions import InsecureRequestWarning
 urllib3.disable_warnings(InsecureRequestWarning)
-- name: 安装依赖库
-run: |pip install lxml_html_clean requests requests-html gitpython aiohttp commentjson urllib3
 
 class GetSrc:
     def __init__(self, username=None, token=None, url=None, repo=None, num=10, target=None, timeout=3, signame=None, mirror=None, jar_suffix=None, site_down=True):
