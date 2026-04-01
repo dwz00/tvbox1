@@ -1650,26 +1650,33 @@ if __name__ == '__main__':
     mirror = os.getenv('mirror')
     jar_suffix = os.getenv('jar_suffix')
     GetSrc(username=username, token=token, url=url, repo=repo, num=num, target=target, timeout=timeout, signame=signame, mirror=mirror, jar_suffix=jar_suffix).run()
+# 确保这一行在文件的最后，且前面没有空格
 if __name__ == "__main__":
     import asyncio
+    import os
+
+    # 1. 自动获取当前 GitHub 运行环境的参数
+    full_repo = os.getenv('GITHUB_REPOSITORY', 'dwz00/tvbox1')
+    github_user = full_repo.split('/')[0]
+    github_repo_name = full_repo.split('/')[1]
     
-    # 填入你的配置信息
-    # 注意：在 GitHub Actions 里，username 和 repo 可以动态获取
-    config = {
-        "username": "你的GitHub用户名", 
-        "url": "这里放你想抓取的原始接口地址", 
-        "repo": "仓库名",
+    # 2. 配置参数
+    target_urls = "https://catvod.com" 
+
+    params = {
+        "username": github_user,
+        "repo": github_repo_name,
+        "token": os.getenv('GITHUB_TOKEN'),
+        "url": target_urls,
         "target": "tvbox.json",
-        "jar_suffix": "jar"
+        "jar_suffix": "jar",
+        "site_down": True
     }
 
-    # 1. 初始化类
-    tool = GetSrc(**config)
+    print(f"--- 开始处理仓库: {full_repo} ---")
     
-    # 2. 运行异步下载任务（drpy2等）
-    asyncio.run(tool.download_drpy2_files())
+    # 3. 实例化工具类
+    tool = GetSrc(**params)
     
-    # 3. 这里调用你类中定义的整理、去重、生成逻辑
-    # 比如：tool.start_process() 或者你自己定义的入口方法
-    print("任务处理完成！")
-
+    # 4. 执行主逻辑
+    tool.run()
