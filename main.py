@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 import os, asyncio, aiohttp, requests, json, hashlib, ssl, urllib3, commentjson
 from pathlib import Path
+# 在 GetSrc 类的 __init__ 中修改：
+self.base_path = Path(os.getcwd()) # 强制获取当前执行路径
+self.jar_path = self.base_path / "jar"
+self.api_path = self.base_path / "api" / "drpy2"
+
+# 确保文件夹真的创建了
+os.makedirs(self.jar_path, exist_ok=True)
+os.makedirs(self.api_path, exist_ok=True)
 
 ssl._create_default_https_context = ssl._create_unverified_context
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -141,6 +149,19 @@ if __name__ == "__main__":
     
     # 这里填入你的真实接口源（一定要是 .json 或 .txt 结尾的直连地址）
     my_api_url = "https://catvod.com" 
+        # --- 写入文件部分 ---
+        output_files = [self.target, "all.json"]
+        for filename in output_files:
+            file_path = self.base_path / filename
+            try:
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    json.dump(config, f, ensure_ascii=False, indent=4)
+                print(f"核心检查：[写入成功] -> {file_path}") 
+            except Exception as e:
+                print(f"核心检查：[写入失败] -> {e}")
+
+        # 检查目录下到底有没有文件（调试用）
+        print(f"当前目录下所有文件: {os.listdir(self.base_path)}")
 
     tool = GetSrc(u_name, r_name, os.getenv('GITHUB_TOKEN'), my_api_url)
     
