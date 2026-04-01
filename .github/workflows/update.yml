@@ -40,3 +40,16 @@ jobs:
           git add .
           git commit -m "自动更新接口: $(date)" || exit 0
           git push
+      - name: 执行整理脚本
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 注入 Token
+        run: python main.py
+
+      - name: 提交并发布文件到本仓库
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@://github.com"
+          # 这一步很关键：确保把生成的 json 和 jar 文件夹都加上
+          git add . 
+          git commit -m "自动更新接口: $(date)" || exit 0
+          git push origin main
