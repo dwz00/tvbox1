@@ -15,9 +15,7 @@ jobs:
       contents: write
 
     steps:
-      - name: 安装依赖库
-        run: |pip install lxml_html_clean requests requests-html gitpython aiohttp commentjson urllib3
-
+    
       - name: 检出代码
         uses: actions/checkout@v3
 
@@ -29,7 +27,9 @@ jobs:
       - name: 安装依赖库
         run: |
           pip install requests requests-html gitpython aiohttp commentjson urllib3
-
+      - name: 安装依赖库
+        run: |
+          pip install lxml_html_clean requests requests-html gitpython aiohttp commentjson urllib3
       - name: 执行整理脚本
         run: python main.py
 
