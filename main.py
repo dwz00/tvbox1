@@ -1,15 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, asyncio, aiohttp, requests, json, hashlib, ssl, urllib3, commentjson
 from pathlib import Path
-# 在 GetSrc 类的 __init__ 中修改：
-self.base_path = Path(os.getcwd()) # 强制获取当前执行路径
-self.jar_path = self.base_path / "jar"
-self.api_path = self.base_path / "api" / "drpy2"
-
-# 确保文件夹真的创建了
-os.makedirs(self.jar_path, exist_ok=True)
-os.makedirs(self.api_path, exist_ok=True)
-
 ssl._create_default_https_context = ssl._create_unverified_context
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
