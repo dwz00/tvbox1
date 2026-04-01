@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - master
   workflow_dispatch:
   schedule:
     - cron: '0 22 * * *'
@@ -15,41 +16,34 @@ jobs:
       contents: write
 
     steps:
-    
       - name: 检出代码
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 设置 Python 环境
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.11'
 
-      - name: 安装依赖库
-        run: |
-          pip install requests requests-html gitpython aiohttp commentjson urllib3
-      - name: 安装依赖库
+      - name: 安装所有依赖
         run: |
           pip install lxml_html_clean requests requests-html gitpython aiohttp commentjson urllib3
+
       - name: 执行整理脚本
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python main.py
 
       - name: 提交并发布文件
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@://github.com"
-          git add .
-          git commit -m "自动更新接口: $(date)" || exit 0
-          git push
-      - name: 执行整理脚本
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 注入 Token
-        run: python main.py
-
-      - name: 提交并发布文件到本仓库
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@://github.com"
-          # 这一步很关键：确保把生成的 json 和 jar 文件夹都加上
-          git add . 
-          git commit -m "自动更新接口: $(date)" || exit 0
-          git push origin main
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 检查是否有文件变动
+          git add -A
+          if git diff --staged --quiet; then
+            echo "没有发现文件变动，跳过提交。"
+          else
+            git commit -m "自动更新接口: $(date +'%Y-%m-%d %H:%M:%S')"
+            # 自动推送到当前分支（兼容 main 或 master）
+            git push origin HEAD
+          fi
