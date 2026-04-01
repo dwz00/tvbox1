@@ -76,15 +76,23 @@ class GetSrc:
                         all_sites.append(s)
             except Exception as e:
                 print(f"抓取失败 {u}: {e}")
-
-        # --- 3. 生成指向本仓库的私有化地址 (修复了 raw 链接格式) ---
-                # --- 3. 生成私有化地址 (修复了链接格式并添加加速) ---
+    
+        # --- 3. 生成私有化地址 (智能查找本地 Jar) ---
         if last_spider_name:
-            # 优先使用 ghp.ci 加速，并确保 raw 格式正确
+            # 本次抓取成功拿到了新 Jar
             my_spider_url = f"https://ghp.ci{self.username}/{self.repo_name}/main/jar/{last_spider_name}"
         else:
-            # 如果没抓到 Jar，给一个保底的远程 Jar (可选)
-            my_spider_url = "https://ghp.cigaotianliuyun/gao/master/lib/spider.jar"
+            # 本次没抓到，尝试去 jar 文件夹找找有没有以前存下的旧 Jar
+            local_jars = list(self.jar_path.glob(f"*.{self.jar_suffix}"))
+            if local_jars:
+                # 如果有旧的，就用最新修改的那一个
+                latest_old_jar = max(local_jars, key=os.path.getmtime).name
+                my_spider_url = f"https://ghp.ci{self.username}/{self.repo_name}/main/jar/{latest_old_jar}"
+                print(f"本次未抓到 Jar，自动复用本地旧 Jar: {latest_old_jar}")
+            else:
+                # 实在没有，才用大厂保底链接（高天流云/饭太硬等）
+                my_spider_url = "https://ghp.cigaotianliuyun/gao/master/lib/spider.jar"
+                print("本地和远程都没找到 Jar，启用大厂保底链接")
 
         # 打印一下看看对不对
         print(f"生成的 Spider 链接: {my_spider_url}")
