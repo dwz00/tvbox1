@@ -134,10 +134,19 @@ class GetSrc:
         print(f"🎉 成功生成文件！总计 {len(all_sites)} 个站点。")
 
 if __name__ == "__main__":
-    # 自动识别仓库信息
+    import os
     full_repo = os.getenv('GITHUB_REPOSITORY', 'dwz00/tvbox1')
     u_name, r_name = full_repo.split('/')
     
+    # 填入上面推荐的链接，建议先试这一个
+    my_api_url = "https://raw.liucn.cc/box/m.json" ,"http://home.jundie.top:81/top98.json","https://gcore.jsdelivr.net/gh/gaotianliuyun/gao@master/js.json","http://cdn.qiaoji8.com/tvbox.json","http://ok321.top/tv","http://www.xn--sss604efuw.com/tv/"
+
+    tool = GetSrc(u_name, r_name, os.getenv('GITHUB_TOKEN'), my_api_url)
+    
+    # 运行
+    asyncio.run(tool.download_drpy2_files())
+    tool.run()
+
     # 这里填入你的真实接口源（一定要是 .json 或 .txt 结尾的直连地址）
     my_api_url = "https://catvod.com" 
       
