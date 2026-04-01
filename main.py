@@ -36,15 +36,70 @@ class GetSrc:
                             print(f"已同步: {f_name}")
                 except: print(f"同步失败: {f_name}")
 
-    def run(self):
+        def run(self):
         if not self.url or "http" not in self.url:
             print(f"无效的 URL 地址: {self.url}")
             return
 
         all_sites = []
-        # 分隔多个地址
         urls = [u.strip() for u in self.url.split(',') if u.strip()]
-        
+        last_spider_name = ""
+
+        for u in urls:
+            print(f"正在抓取: {u}")
+            try:
+                res = self.s.get(u, timeout=15, verify=False)
+                data = commentjson.loads(res.text)
+                
+                # --- 1. 处理并本地化 Spider (Jar) ---
+                remote_spider = data.get('spider', '')
+                if remote_spider and remote_spider.startswith('http'):
+                    jar_hash = hashlib.md5(remote_spider.encode()).hexdigest()
+                    jar_name = f"{jar_hash}.{self.jar_suffix}"
+                    local_jar_file = self.jar_path / jar_name
+                    
+                    if not local_jar_file.exists():
+                        print(f"正在下载远程 Jar: {remote_spider}")
+                        try:
+                            jar_res = self.s.get(remote_spider, timeout=20, verify=False)
+                            with open(local_jar_file, 'wb') as f:
+                                f.write(jar_res.content)
+                            last_spider_name = jar_name
+                        except:
+                            print(f"Jar 下载失败: {remote_spider}")
+                    else:
+                        last_spider_name = jar_name
+
+                # --- 2. 站点去重 ---
+                sites = data.get('sites', [])
+                for s in sites:
+                    if s.get('api') and not any(x.get('api') == s.get('api') for x in all_sites):
+                        all_sites.append(s)
+            except Exception as e:
+                print(f"抓取失败 {u}: {e}")
+
+        # --- 3. 生成指向本仓库的私有化地址 (修复了 raw 链接格式) ---
+        if last_spider_name:
+            my_spider_url = f"https://githubusercontent.com{self.username}/{self.repo_name}/main/jar/{last_spider_name}"
+        else:
+            my_spider_url = ""
+
+        # --- 4. 构造最终配置 (合并直播源) ---
+        config = {
+            "spider": my_spider_url,
+            "sites": all_sites,
+            "lives": [{"name": "直播", "type": 0, "url": "https://githubusercontent.comssili126/tv/main/itvlist.txt"}]
+        }
+
+        # --- 5. 统一写入文件 ---
+        for filename in [self.target, "all.json"]:
+            with open(self.base_path / filename, 'w', encoding='utf-8') as f:
+                json.dump(config, f, ensure_ascii=False, indent=4)
+            
+        print(f"🎉 处理成功！")
+        print(f"新的 Spider 地址: {my_spider_url}")
+        print(f"总计去重站点: {len(all_sites)}")
+
         last_spider = ""
         for u in urls:
             print(f"正在抓取: {u}")
