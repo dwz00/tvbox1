@@ -913,10 +913,30 @@ class GetSrc:
         print(f'耗时: {end_time - start_time} 秒\n\n#################影视仓APP配置接口########################\n\n{self.cnb_slot}/all.json\n{self.cnb_slot}/{self.target}')
 
 
-if __name__ == '__main__':
-    token = 'xxx'
-    username = 'fish2018'
-    repo = 'test'
+    if __name__ == "__main__":
+    import asyncio
+    import os
+
+    # 自动获取 GitHub 运行环境中的仓库信息
+    # 这样你就不用手动写死用户名和仓库名了
+    github_repo = os.getenv('GITHUB_REPOSITORY', '你的用户名/你的仓库名')
+    user_name = github_repo.split('/')[0]
+    repo_name = github_repo.split('/')[1]
+
+    params = {
+        "username": user_name,
+        "repo": repo_name,
+        "token": os.getenv('GITHUB_TOKEN'), # 从环境变量读取 Token
+        "url": "https://catvod.com", # 你要抓取的源
+        "target": "tvbox.json",
+        "jar_suffix": "jar"
+    }
+
+    # 初始化并运行
+    tool = GetSrc(**params)
+    
+    tool.run()
+
     # url = 'https://github.moeyy.xyz/https://raw.githubusercontent.com/wwb521/live/main/video.json?signame=18'
     # url = 'https://github.moeyy.xyz/https://raw.githubusercontent.com/supermeguo/BoxRes/main/Myuse/catcr.json?signame=v18'
     # url = 'http://box.ufuzi.com/tv/qq/%E7%9F%AD%E5%89%A7%E9%A2%91%E9%81%93/api.json?signame=duanju'
