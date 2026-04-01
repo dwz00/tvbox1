@@ -27,9 +27,6 @@ import urllib3
 from urllib3.exceptions import InsecureRequestWarning
 urllib3.disable_warnings(InsecureRequestWarning)
 
-global pipes
-pipes = set()
-
 class GetSrc:
     def __init__(self, username=None, token=None, url=None, repo=None, num=10, target=None, timeout=3, signame=None, mirror=None, jar_suffix=None, site_down=True):
         self.jar_suffix = jar_suffix if jar_suffix else 'jar'
@@ -949,9 +946,6 @@ ssl._create_default_https_context = ssl._create_unverified_context
 import urllib3
 from urllib3.exceptions import InsecureRequestWarning
 urllib3.disable_warnings(InsecureRequestWarning)
-
-global pipes
-pipes = set()
 
 class GetSrc:
     def __init__(self, username=None, token=None, url=None, repo=None, num=10, target=None, timeout=3, signame=None, mirror=None, jar_suffix=None):
