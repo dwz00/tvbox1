@@ -919,22 +919,22 @@ class GetSrc:
 
     # 1. 自动获取当前 GitHub 运行环境的参数
     # 如果在本地运行，请手动填入你的用户名和仓库名
-    full_repo = os.getenv('GITHUB_REPOSITORY', '你的用户名/你的仓库名')
-    github_user = full_repo.split('/')[0]
-    github_repo_name = full_repo.split('/')[1]
+        full_repo = os.getenv('GITHUB_REPOSITORY', '你的用户名/你的仓库名')
+        github_user = full_repo.split('/')[0]
+        github_repo_name = full_repo.split('/')[1]
     
     # 2. 这里的 URL 必须填入你想抓取的原始接口地址，不能为 None
     # 支持多个地址用英文逗号隔开
-    target_urls = "https://catvod.com" 
+        target_urls = "https://catvod.com" 
 
-    params = {
-        "username": github_user,
-        "repo": github_repo_name,
-        "token": os.getenv('GITHUB_TOKEN'), # 从 Workflow 自动注入
-        "url": target_urls,
-        "target": "tvbox.json",
-        "jar_suffix": "jar",
-        "site_down": True
+        params = {
+            "username": github_user,
+            "repo": github_repo_name,
+            "token": os.getenv('GITHUB_TOKEN'), # 从 Workflow 自动注入
+            "url": target_urls,
+            "target": "tvbox.json",
+            "jar_suffix": "jar",
+            "site_down": True
     }
 
     print(f"--- 开始处理仓库: {full_repo} ---")
