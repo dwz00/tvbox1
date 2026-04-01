@@ -1,5 +1,13 @@
 name: 自动更新接口去重
 on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: '0 22 * * *'
+
+jobs:
   schedule:
     - cron: '0 0 * * *' # 每天凌晨自动运行一次
   workflow_dispatch:      # 支持手动点击运行
