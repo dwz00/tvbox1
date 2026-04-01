@@ -143,21 +143,11 @@ if __name__ == "__main__":
         u_name, r_name = "dwz00", "tvbox1"
     
     # 【修复重点】确保这里只是一个纯字符串，没有任何多余的括号
-    # 删除了会拦截报错的 catvod.com
-    my_api_url = "https://liucn.cc" 
+
+    my_api_url = "https://raw.liucn.cc/box/m.json" 
 
     tool = GetSrc(u_name, r_name, os.getenv('GITHUB_TOKEN'), my_api_url)
     
-    # 运行
-    asyncio.run(tool.download_drpy2_files())
-    tool.run()
-
-
-    # 这里填入你的真实接口源（一定要是 .json 或 .txt 结尾的直连地址）
-    my_api_url = "https://tvbox.catvod.com/catvod.json" 
-      
-
-    tool = GetSrc(u_name, r_name, os.getenv('GITHUB_TOKEN'), my_api_url)
     
     # 运行
     asyncio.run(tool.download_drpy2_files())
