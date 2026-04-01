@@ -139,7 +139,7 @@ if __name__ == "__main__":
     u_name, r_name = full_repo.split('/')
     
     # 填入上面推荐的链接，建议先试这一个
-    my_api_url = "https://raw.liucn.cc/box/m.json" ,"http://home.jundie.top:81/top98.json","https://gcore.jsdelivr.net/gh/gaotianliuyun/gao@master/js.json","http://cdn.qiaoji8.com/tvbox.json","http://ok321.top/tv","http://www.xn--sss604efuw.com/tv/"
+    my_api_url = "https://tvbox.catvod.com/catvod.json","https://raw.liucn.cc/box/m.json" ,"http://home.jundie.top:81/top98.json","https://gcore.jsdelivr.net/gh/gaotianliuyun/gao@master/js.json","http://cdn.qiaoji8.com/tvbox.json","http://ok321.top/tv","http://www.xn--sss604efuw.com/tv/"
 
     tool = GetSrc(u_name, r_name, os.getenv('GITHUB_TOKEN'), my_api_url)
     
