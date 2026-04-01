@@ -917,33 +917,48 @@ class GetSrc:
     import asyncio
     import os
 
-    # 自动获取 GitHub 运行环境中的仓库信息
-    # 这样你就不用手动写死用户名和仓库名了
-    github_repo = os.getenv('GITHUB_REPOSITORY', '你的用户名/你的仓库名')
-    user_name = github_repo.split('/')[0]
-    repo_name = github_repo.split('/')[1]
+    # 1. 自动获取当前 GitHub 运行环境的参数
+    # 如果在本地运行，请手动填入你的用户名和仓库名
+    full_repo = os.getenv('GITHUB_REPOSITORY', '你的用户名/你的仓库名')
+    github_user = full_repo.split('/')[0]
+    github_repo_name = full_repo.split('/')[1]
+    
+    # 2. 这里的 URL 必须填入你想抓取的原始接口地址，不能为 None
+    # 支持多个地址用英文逗号隔开
+    target_urls = "https://catvod.com" 
 
     params = {
-        "username": user_name,
-        "repo": repo_name,
-        "token": os.getenv('GITHUB_TOKEN'), # 从环境变量读取 Token
-        "url": "https://catvod.com", # 你要抓取的源
+        "username": github_user,
+        "repo": github_repo_name,
+        "token": os.getenv('GITHUB_TOKEN'), # 从 Workflow 自动注入
+        "url": target_urls,
         "target": "tvbox.json",
-        "jar_suffix": "jar"
+        "jar_suffix": "jar",
+        "site_down": True
     }
 
-    # 初始化并运行
+    print(f"--- 开始处理仓库: {full_repo} ---")
+    
+    # 3. 初始化工具类
     tool = GetSrc(**params)
     
-    tool.run()
+    # 4. 下载必要的核心库 (drpy2 等)
+    try:
+        print("正在同步核心依赖文件...")
+        asyncio.run(tool.download_drpy2_files())
+    except Exception as e:
+        print(f"同步依赖文件时出现非致命错误: {e}")
 
-    # url = 'https://github.moeyy.xyz/https://raw.githubusercontent.com/wwb521/live/main/video.json?signame=18'
-    # url = 'https://github.moeyy.xyz/https://raw.githubusercontent.com/supermeguo/BoxRes/main/Myuse/catcr.json?signame=v18'
-    # url = 'http://box.ufuzi.com/tv/qq/%E7%9F%AD%E5%89%A7%E9%A2%91%E9%81%93/api.json?signame=duanju'
-    # url = 'https://肥猫.com?signame=肥猫'
-    url = 'https://tvbox.catvod.com/xs/api.json?signame=xs'
-    site_down = True # 将site中的文件下载本地化
-    GetSrc(username=username, token=token, url=url, repo=repo, mirror=4, num=10, site_down=site_down).run()
+    # 5. 执行主逻辑：抓取、去重、生成本地化 JSON
+    try:
+        print("正在执行接口去重与私有化...")
+        tool.run()
+        print("--- 接口处理成功 ---")
+    except Exception as e:
+        print(f"执行失败，错误详情: {e}")
+        # 如果依然报 split 错误，强制给 url 赋值再跑一次
+        tool.url = target_urls
+        tool.batch_handle_online_interface()
 
 # -*- coding: utf-8 -*-
 # !/usr/bin/env python3
