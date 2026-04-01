@@ -29,7 +29,7 @@ class GetSrc:
                 target = self.api_path / f_name
                 if target.exists(): continue
                 # 直接用 GitHub 官方地址，Actions 访问很快
-                raw_url = f"https://githubusercontent.com{f_name}"
+                raw_url = f"https://githubusercontent.com/{f_name}"
                 try:
                     async with session.get(raw_url, timeout=15) as res:
                         if res.status == 200:
@@ -89,7 +89,7 @@ class GetSrc:
             if local_jars:
                 # 如果有旧的，就用最新修改的那一个
                 latest_old_jar = max(local_jars, key=os.path.getmtime).name
-                my_spider_url = f"https://ghp.ci{self.username}/{self.repo_name}/main/jar/{latest_old_jar}"
+                my_spider_url = f"https://ghproxy.com/{self.username}/{self.repo_name}/main/jar/{latest_old_jar}"
                 print(f"本次未抓到 Jar，自动复用本地旧 Jar: {latest_old_jar}")
             else:
                 # 实在没有，才用大厂保底链接（高天流云/饭太硬等）
