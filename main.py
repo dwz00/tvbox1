@@ -36,7 +36,7 @@ class GetSrc:
                             print(f"已同步: {f_name}")
                 except: print(f"同步失败: {f_name}")
 
-        def run(self):
+    def run(self):
         if not self.url or "http" not in self.url:
             print(f"无效的 URL 地址: {self.url}")
             return
